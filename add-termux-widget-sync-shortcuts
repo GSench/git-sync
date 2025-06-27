@@ -1,0 +1,109 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+REPO_DIR="$(realpath .)"
+REPO_NAME="$(basename "$REPO_DIR")"
+SHORTCUT_DIR="$HOME/.shortcuts"
+ICON_DIR="$SHORTCUT_DIR/icons"
+LOG_FILE="_sync_log.txt"
+
+# Paths for individual shortcuts
+SYNC_SCRIPT="${SHORTCUT_DIR}/git-sync_${REPO_NAME}"
+VIEW_SCRIPT="${SHORTCUT_DIR}/view-sync-log_${REPO_NAME}"
+CLEAR_SCRIPT="${SHORTCUT_DIR}/clear-sync-log_${REPO_NAME}"
+
+# Paths for all-* scripts
+ALL_SYNC="${SHORTCUT_DIR}/git-sync-all"
+ALL_VIEW="${SHORTCUT_DIR}/view-sync-log-all"
+ALL_CLEAR="${SHORTCUT_DIR}/clear-sync-log-all"
+
+# Create necessary directories with secure permissions
+mkdir -p "$SHORTCUT_DIR" "$ICON_DIR"
+chmod 700 "$SHORTCUT_DIR" "$ICON_DIR"
+
+# Create git-sync_<repo> script
+cat > "$SYNC_SCRIPT" <<EOF
+#!/data/data/com.termux/files/usr/bin/bash
+source ~/.bashrc
+cd "$REPO_DIR"
+{
+  echo "==== \$(date '+%Y-%m-%d %H:%M:%S') ===="
+  bash git-sync -n -s
+} 2>&1 | tee -a "$LOG_FILE"
+read -n 1 -s -r -p "Press any key to continue..."
+echo
+EOF
+chmod +x "$SYNC_SCRIPT"
+
+# Create view-sync-log_<repo> script
+cat > "$VIEW_SCRIPT" <<EOF
+#!/data/data/com.termux/files/usr/bin/bash
+cd "$REPO_DIR"
+if [ -f "$LOG_FILE" ]; then
+  echo "=== Sync Log for $REPO_NAME ==="
+  cat "$LOG_FILE"
+else
+  echo "No sync log found."
+fi
+read -n 1 -s -r -p "Press any key to continue..."
+echo
+EOF
+chmod +x "$VIEW_SCRIPT"
+
+# Create clear-sync-log_<repo> script
+cat > "$CLEAR_SCRIPT" <<EOF
+#!/data/data/com.termux/files/usr/bin/bash
+cd "$REPO_DIR"
+> "$LOG_FILE"
+echo "Sync log cleared for $REPO_NAME."
+read -n 1 -s -r -p "Press any key to continue..."
+echo
+EOF
+chmod +x "$CLEAR_SCRIPT"
+
+# Copy icon if available
+ICON_SOURCE="${REPO_DIR}/icon.png"
+ICON_TARGET="${ICON_DIR}/git-sync_${REPO_NAME}.png"
+if [ -f "$ICON_SOURCE" ]; then
+  cp "$ICON_SOURCE" "$ICON_TARGET"
+  chmod 600 "$ICON_TARGET"
+  echo "✔ Icon installed for $REPO_NAME"
+fi
+
+# Create or overwrite git-sync-all
+cat > "$ALL_SYNC" <<EOF
+#!/data/data/com.termux/files/usr/bin/bash
+for f in "$SHORTCUT_DIR"/git-sync_*; do
+  [[ "$f" == *-all ]] && continue
+  [ -x "$f" ] && echo "🔄 Running \$f" && bash "\$f"
+done
+read -n 1 -s -r -p "Press any key to continue..."
+echo
+EOF
+chmod +x "$ALL_SYNC"
+
+# Create or overwrite view-sync-log-all
+cat > "$ALL_VIEW" <<EOF
+#!/data/data/com.termux/files/usr/bin/bash
+for f in "$SHORTCUT_DIR"/view-sync-log_*; do
+  [[ "$f" == *-all ]] && continue
+  [ -x "$f" ] && echo "📄 Viewing \$f" && bash "\$f"
+done
+read -n 1 -s -r -p "Press any key to continue..."
+echo
+EOF
+chmod +x "$ALL_VIEW"
+
+# Create or overwrite clear-sync-log-all
+cat > "$ALL_CLEAR" <<EOF
+#!/data/data/com.termux/files/usr/bin/bash
+for f in "$SHORTCUT_DIR"/clear-sync-log_*; do
+  [[ "$f" == *-all ]] && continue
+  [ -x "$f" ] && echo "🧹 Clearing \$f" && bash "\$f"
+done
+read -n 1 -s -r -p "Press any key to continue..."
+echo
+EOF
+chmod +x "$ALL_CLEAR"
+
+echo "✅ Termux Widget shortcuts installed for $REPO_NAME."
+echo "🔁 Refresh your Termux Widget to see them."

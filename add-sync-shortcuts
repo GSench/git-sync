@@ -1,0 +1,84 @@
+#!/bin/bash
+
+REPO_DIR="$(realpath .)"
+REPO_NAME="$(basename "$REPO_DIR")"
+SHORTCUT_DIR="$HOME/sync-shortcuts"
+LOG_FILE="_sync_log.txt"
+
+# Paths for individual shortcuts
+SYNC_SCRIPT="${SHORTCUT_DIR}/git-sync_${REPO_NAME}"
+VIEW_SCRIPT="${SHORTCUT_DIR}/view-sync-log_${REPO_NAME}"
+CLEAR_SCRIPT="${SHORTCUT_DIR}/clear-sync-log_${REPO_NAME}"
+
+# Paths for all-* scripts
+ALL_SYNC="${SHORTCUT_DIR}/git-sync-all"
+ALL_VIEW="${SHORTCUT_DIR}/view-sync-log-all"
+ALL_CLEAR="${SHORTCUT_DIR}/clear-sync-log-all"
+
+# Create shortcut directory
+mkdir -p "$SHORTCUT_DIR"
+
+# Create git-sync_<repo> script
+cat > "$SYNC_SCRIPT" <<EOF
+#!/bin/bash
+cd "$REPO_DIR"
+{
+  echo "==== \$(date '+%Y-%m-%d %H:%M:%S') ===="
+  bash git-sync -n -s
+} 2>&1 | tee -a "$LOG_FILE"
+EOF
+chmod +x "$SYNC_SCRIPT"
+
+# Create view-sync-log_<repo> script
+cat > "$VIEW_SCRIPT" <<EOF
+#!/bin/bash
+cd "$REPO_DIR"
+if [ -f "$LOG_FILE" ]; then
+  echo "=== Sync Log for $REPO_NAME ==="
+  cat "$LOG_FILE"
+else
+  echo "No sync log found."
+fi
+EOF
+chmod +x "$VIEW_SCRIPT"
+
+# Create clear-sync-log_<repo> script
+cat > "$CLEAR_SCRIPT" <<EOF
+#!/bin/bash
+cd "$REPO_DIR"
+> "$LOG_FILE"
+echo "Sync log cleared for $REPO_NAME."
+EOF
+chmod +x "$CLEAR_SCRIPT"
+
+# Create or overwrite git-sync-all
+cat > "$ALL_SYNC" <<EOF
+#!/bin/bash
+for f in "$SHORTCUT_DIR"/git-sync_*; do
+  [[ "$f" == *-all ]] && continue
+  [ -x "$f" ] && echo "🔄 Running \$f" && bash "\$f"
+done
+EOF
+chmod +x "$ALL_SYNC"
+
+# Create or overwrite view-sync-log-all
+cat > "$ALL_VIEW" <<EOF
+#!/bin/bash
+for f in "$SHORTCUT_DIR"/view-sync-log_*; do
+  [[ "$f" == *-all ]] && continue
+  [ -x "$f" ] && echo "📄 Viewing \$f" && bash "\$f"
+done
+EOF
+chmod +x "$ALL_VIEW"
+
+# Create or overwrite clear-sync-log-all
+cat > "$ALL_CLEAR" <<EOF
+#!/bin/bash
+for f in "$SHORTCUT_DIR"/clear-sync-log_*; do
+  [[ "$f" == *-all ]] && continue
+  [ -x "$f" ] && echo "🧹 Clearing \$f" && bash "\$f"
+done
+EOF
+chmod +x "$ALL_CLEAR"
+
+echo "✅ Bash shortcuts installed for $REPO_NAME in $SHORTCUT_DIR"
