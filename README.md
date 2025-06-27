@@ -109,12 +109,20 @@ name and time by default.
 
 There are several `git config`-based options for tailoring your sync:
 
-    branch.$branch_name.syncNewFiles (bool)
+    branch.$branch_name.sync (bool) and git-sync.syncEnabled (bool)
+
+Configures the branch for sync. Without one of these two (or the equivalent `-s`
+command-line flag) git-sync will refuse to perform automated modifications of
+the repository. Both flags have the same meaning, and the branch-specific one
+can be used to override the settings of the generic flag on a per-branch basis.
+
+    branch.$branch_name.syncNewFiles (bool) and git-sync.syncNewFiles (bool)
 
 Tells git-sync to invoke auto-commit even if new (untracked) files are
-present. Normally you have to commit those yourself to prevent
-accidental additions. git-sync will exit at stage 3 with an
-explanation in that case.
+present. Normally you have to commit those yourself to prevent accidental
+additions. git-sync will exit at stage 3 with an explanation in that case. Both
+flags have the same meaning, and the branch-specific one can be used to override
+the settings of the generic flag on a per-branch basis.
 
     branch.$branch_name.syncSkipHooks (bool) and git-sync.syncSkipHooks (bool)
 
@@ -166,10 +174,19 @@ Automatically synchronize your git repository whenever a file is touched.
 files as soon as they happen. `inotifywait` waits for events from the operating
 system which are triggered by any edits you make to files in the git repository.
 This means that updates are near instantaneous, without the need to resort to
-polling. `git-sync-on-inotify` still does a polling call to `git-sync` to ensure that changes from the upstream do make it in. This polling interval is configurable with the environment variable `GIT_SYNC_INTERVAL`.
+polling. `git-sync-on-inotify` still does a polling call to `git-sync` to
+ensure that changes from the upstream do make it in. This polling interval
+is configurable with the environment variable `GIT_SYNC_INTERVAL`.
 
 By design, this solution may miss changes until the next
 GIT_SYNC_INTERVAL time.
+
+## git-sync-on-fswatch
+
+Works much like `git-sync-on-inotify`, from which it was derived, to
+automatically sync when triggered by file system watches.
+
+https://emcrisostomo.github.io/fswatch/
 
 ## modd.conf
 
