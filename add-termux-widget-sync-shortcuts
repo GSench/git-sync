@@ -7,7 +7,7 @@ SHORTCUT_DIR="$HOME/.shortcuts"
 ICON_DIR="$SHORTCUT_DIR/icons"
 LOG_FILE="_sync_log.txt"
 
-# Paths for individual shortcuts
+# === Paths for individual shortcut scripts ===
 SYNC_SCRIPT="${SHORTCUT_DIR}/git-sync_${REPO_NAME}"
 VIEW_SCRIPT="${SHORTCUT_DIR}/view-sync-log_${REPO_NAME}"
 CLEAR_SCRIPT="${SHORTCUT_DIR}/clear-sync-log_${REPO_NAME}"
