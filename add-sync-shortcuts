@@ -54,9 +54,9 @@ chmod +x "$CLEAR_SCRIPT"
 # Create or overwrite git-sync-all
 cat > "$ALL_SYNC" <<EOF
 #!/bin/bash
-for f in "$SHORTCUT_DIR"/git-sync_*; do
-  [[ "$f" == *-all ]] && continue
-  [ -x "$f" ] && echo "🔄 Running \$f" && bash "\$f"
+for f in $SHORTCUT_DIR/git-sync_*; do
+  [[ "\$f" == *-all ]] && continue
+  [ -x "\$f" ] && echo "🔄 Running \$f" && bash "\$f"
 done
 EOF
 chmod +x "$ALL_SYNC"
@@ -64,9 +64,9 @@ chmod +x "$ALL_SYNC"
 # Create or overwrite view-sync-log-all
 cat > "$ALL_VIEW" <<EOF
 #!/bin/bash
-for f in "$SHORTCUT_DIR"/view-sync-log_*; do
-  [[ "$f" == *-all ]] && continue
-  [ -x "$f" ] && echo "📄 Viewing \$f" && bash "\$f"
+for f in $SHORTCUT_DIR/view-sync-log_*; do
+  [[ "\$f" == *-all ]] && continue
+  [ -x "\$f" ] && echo "📄 Viewing \$f" && bash "\$f"
 done
 EOF
 chmod +x "$ALL_VIEW"
@@ -74,9 +74,9 @@ chmod +x "$ALL_VIEW"
 # Create or overwrite clear-sync-log-all
 cat > "$ALL_CLEAR" <<EOF
 #!/bin/bash
-for f in "$SHORTCUT_DIR"/clear-sync-log_*; do
-  [[ "$f" == *-all ]] && continue
-  [ -x "$f" ] && echo "🧹 Clearing \$f" && bash "\$f"
+for f in $SHORTCUT_DIR/clear-sync-log_*; do
+  [[ "\$f" == *-all ]] && continue
+  [ -x "\$f" ] && echo "🧹 Clearing \$f" && bash "\$f"
 done
 EOF
 chmod +x "$ALL_CLEAR"
