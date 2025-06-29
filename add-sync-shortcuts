@@ -1,24 +1,27 @@
 #!/bin/bash
 
+# === Configuration ===
+# Allow custom target directory as first argument, default to ~/sync-shortcuts
+INPUT_PATH="${1:-$HOME/sync-shortcuts}"
+SHORTCUT_DIR="$(realpath "$INPUT_PATH")"
 REPO_DIR="$(realpath .)"
 REPO_NAME="$(basename "$REPO_DIR")"
-SHORTCUT_DIR="$HOME/sync-shortcuts"
 LOG_FILE="_sync_log.txt"
 
-# Paths for individual shortcuts
+# === Paths for individual shortcut scripts ===
 SYNC_SCRIPT="${SHORTCUT_DIR}/git-sync_${REPO_NAME}"
 VIEW_SCRIPT="${SHORTCUT_DIR}/view-sync-log_${REPO_NAME}"
 CLEAR_SCRIPT="${SHORTCUT_DIR}/clear-sync-log_${REPO_NAME}"
 
-# Paths for all-* scripts
+# === Paths for all-* scripts ===
 ALL_SYNC="${SHORTCUT_DIR}/git-sync-all"
 ALL_VIEW="${SHORTCUT_DIR}/view-sync-log-all"
 ALL_CLEAR="${SHORTCUT_DIR}/clear-sync-log-all"
 
-# Create shortcut directory
+# === Create shortcut directory ===
 mkdir -p "$SHORTCUT_DIR"
 
-# Create git-sync_<repo> script
+# === Create git-sync_<repo> script ===
 cat > "$SYNC_SCRIPT" <<EOF
 #!/bin/bash
 cd "$REPO_DIR"
@@ -29,7 +32,7 @@ cd "$REPO_DIR"
 EOF
 chmod +x "$SYNC_SCRIPT"
 
-# Create view-sync-log_<repo> script
+# === Create view-sync-log_<repo> script ===
 cat > "$VIEW_SCRIPT" <<EOF
 #!/bin/bash
 cd "$REPO_DIR"
@@ -42,7 +45,7 @@ fi
 EOF
 chmod +x "$VIEW_SCRIPT"
 
-# Create clear-sync-log_<repo> script
+# === Create clear-sync-log_<repo> script ===
 cat > "$CLEAR_SCRIPT" <<EOF
 #!/bin/bash
 cd "$REPO_DIR"
@@ -51,32 +54,32 @@ echo "Sync log cleared for $REPO_NAME."
 EOF
 chmod +x "$CLEAR_SCRIPT"
 
-# Create or overwrite git-sync-all
+# === Create or overwrite git-sync-all ===
 cat > "$ALL_SYNC" <<EOF
 #!/bin/bash
 for f in $SHORTCUT_DIR/git-sync_*; do
   [[ "\$f" == *-all ]] && continue
-  [ -x "\$f" ] && echo "🔄 Running \$f" && bash "\$f"
+  [ -x "\$f" ] && echo "🔄 Running: \$f" && bash "\$f"
 done
 EOF
 chmod +x "$ALL_SYNC"
 
-# Create or overwrite view-sync-log-all
+# === Create or overwrite view-sync-log-all ===
 cat > "$ALL_VIEW" <<EOF
 #!/bin/bash
 for f in $SHORTCUT_DIR/view-sync-log_*; do
   [[ "\$f" == *-all ]] && continue
-  [ -x "\$f" ] && echo "📄 Viewing \$f" && bash "\$f"
+  [ -x "\$f" ] && echo "📄 Viewing: \$f" && bash "\$f"
 done
 EOF
 chmod +x "$ALL_VIEW"
 
-# Create or overwrite clear-sync-log-all
+# === Create or overwrite clear-sync-log-all ===
 cat > "$ALL_CLEAR" <<EOF
 #!/bin/bash
 for f in $SHORTCUT_DIR/clear-sync-log_*; do
   [[ "\$f" == *-all ]] && continue
-  [ -x "\$f" ] && echo "🧹 Clearing \$f" && bash "\$f"
+  [ -x "\$f" ] && echo "🧹 Clearing: \$f" && bash "\$f"
 done
 EOF
 chmod +x "$ALL_CLEAR"
