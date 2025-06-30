@@ -9,14 +9,14 @@ REPO_NAME="$(basename "$REPO_DIR")"
 LOG_FILE="_sync_log.txt"
 
 # === Paths for individual shortcut scripts ===
-SYNC_SCRIPT="${SHORTCUT_DIR}/git-sync_${REPO_NAME}"
-VIEW_SCRIPT="${SHORTCUT_DIR}/view-sync-log_${REPO_NAME}"
-CLEAR_SCRIPT="${SHORTCUT_DIR}/clear-sync-log_${REPO_NAME}"
+SYNC_SCRIPT="${SHORTCUT_DIR}/02_git-sync_${REPO_NAME}"
+VIEW_SCRIPT="${SHORTCUT_DIR}/04_view-sync-log_${REPO_NAME}"
+CLEAR_SCRIPT="${SHORTCUT_DIR}/06_clear-sync-log_${REPO_NAME}"
 
 # === Paths for all-* scripts ===
-ALL_SYNC="${SHORTCUT_DIR}/git-sync-all"
-ALL_VIEW="${SHORTCUT_DIR}/view-sync-log-all"
-ALL_CLEAR="${SHORTCUT_DIR}/clear-sync-log-all"
+ALL_SYNC="${SHORTCUT_DIR}/01_git-sync-all"
+ALL_VIEW="${SHORTCUT_DIR}/03_view-sync-log-all"
+ALL_CLEAR="${SHORTCUT_DIR}/05_clear-sync-log-all"
 
 # === Create shortcut directory ===
 mkdir -p "$SHORTCUT_DIR"
@@ -57,9 +57,9 @@ chmod +x "$CLEAR_SCRIPT"
 # === Create or overwrite git-sync-all ===
 cat > "$ALL_SYNC" <<EOF
 #!/bin/bash
-for f in $SHORTCUT_DIR/git-sync_*; do
+for f in $SHORTCUT_DIR/02_git-sync_*; do
   [[ "\$f" == *-all ]] && continue
-  [ -x "\$f" ] && echo "🔄 Running: \$f" && bash "\$f"
+  echo "🔄 Running: \$f" && bash "\$f"
 done
 EOF
 chmod +x "$ALL_SYNC"
@@ -67,9 +67,9 @@ chmod +x "$ALL_SYNC"
 # === Create or overwrite view-sync-log-all ===
 cat > "$ALL_VIEW" <<EOF
 #!/bin/bash
-for f in $SHORTCUT_DIR/view-sync-log_*; do
+for f in $SHORTCUT_DIR/04_view-sync-log_*; do
   [[ "\$f" == *-all ]] && continue
-  [ -x "\$f" ] && echo "📄 Viewing: \$f" && bash "\$f"
+  echo "📄 Viewing: \$f" && bash "\$f"
 done
 EOF
 chmod +x "$ALL_VIEW"
@@ -77,9 +77,9 @@ chmod +x "$ALL_VIEW"
 # === Create or overwrite clear-sync-log-all ===
 cat > "$ALL_CLEAR" <<EOF
 #!/bin/bash
-for f in $SHORTCUT_DIR/clear-sync-log_*; do
+for f in $SHORTCUT_DIR/06_clear-sync-log_*; do
   [[ "\$f" == *-all ]] && continue
-  [ -x "\$f" ] && echo "🧹 Clearing: \$f" && bash "\$f"
+  echo "🧹 Clearing: \$f" && bash "\$f"
 done
 EOF
 chmod +x "$ALL_CLEAR"
