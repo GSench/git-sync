@@ -27,7 +27,7 @@ cat > "$SYNC_SCRIPT" <<EOF
 cd "$REPO_DIR"
 {
   echo "==== \$(date '+%Y-%m-%d %H:%M:%S') ===="
-  bash git-sync -n -s
+  bash git-sync -f -s
 } 2>&1 | tee -a "$LOG_FILE"
 EOF
 chmod +x "$SYNC_SCRIPT"

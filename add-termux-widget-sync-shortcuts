@@ -29,7 +29,7 @@ source ~/.bashrc
 cd "$REPO_DIR"
 {
   echo "==== \$(date '+%Y-%m-%d %H:%M:%S') ===="
-  bash git-sync -n -s
+  bash git-sync -f -s
 } 2>&1 | tee -a "$LOG_FILE"
 read -n 1 -s -r -p "Press any key to continue..."
 echo
