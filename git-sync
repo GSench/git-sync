@@ -42,7 +42,7 @@ DEFAULT_AUTOCOMMIT_MSG="changes from $(uname -n) on $(date)"
 
 print_usage() {
     cat << EOF
-usage: $0 [-h] [-n] [-s] [MODE]
+usage: $0 [-h] [-n] [-s] [-f] [MODE]
 
 Synchronize the current branch to a remote backup
 MODE may be either "sync" (the default) or "check", to verify that the branch is ready to sync
@@ -51,12 +51,14 @@ OPTIONS:
    -h      Show this message
    -n      Commit new files even if branch.\$branch_name.syncNewFiles isn't set
    -s      Sync the branch even if branch.\$branch_name.sync isn't set
+   -f      Force sync even if deleted, renamed or staged files persist
 EOF
 }
 sync_new_files_anyway="false"
 sync_anyway="false"
+force_sync="false"
 
-while getopts "hns" opt ; do
+while getopts "hnsf" opt ; do
     case $opt in
         h )
             print_usage
@@ -67,6 +69,9 @@ while getopts "hns" opt ; do
             ;;
         s )
             sync_anyway="true"
+            ;;
+        f )
+            force_sync="true"
             ;;
     esac
 done
@@ -89,6 +94,21 @@ __gitdir()
 	fi
 }
 
+__force_flag()
+{
+    if [[ "true" == "$force_sync" ]]; then
+        echo "true"
+        return
+    fi
+
+    force_sync_flag="false"
+    if [ -z "$force_sync_flag" ] ; then
+        force_sync_flag="false"
+    fi
+
+    echo "$force_sync_flag"
+}
+
 __syncnew_flag()
 {
     if [[ "true" == "$sync_new_files_anyway" ]]; then
@@ -102,6 +122,9 @@ __syncnew_flag()
     fi
     if [ -z "$syncnew_flag" ] ; then
         syncnew_flag="false"
+    fi
+    if [[ "true" == "$(__force_flag)" ]]; then
+        syncnew_flag="true"
     fi
 
     echo "$syncnew_flag"
@@ -213,6 +236,16 @@ check_initial_file_state()
 	if [ ! -z "$(git status --porcelain | grep -E '^[^ ][^M] *')" ]; then
 	    echo "NotOnlyModified"
 	fi
+    fi
+}
+
+# check if we are in a truly unsafe state even with --force enabled
+check_dangerous_state_force_mode() {
+    # Look for merge conflicts or rebase in progress
+    if git status --porcelain | grep -q -E '^(AA|DD|AU|UD|UA|DU|UU) '; then
+        echo "Conflicted"
+    elif [ -d .git/rebase-apply ] || [ -d .git/rebase-merge ] || [ -f .git/MERGE_HEAD ]; then
+        echo "InProgressMerge"
     fi
 }
 
@@ -344,11 +377,19 @@ __log_msg "Mode $mode"
 
 __log_msg "Using $remote_name/$branch_name"
 
+if [[ "true" == "$(__force_flag)" ]]; then
+  if [ ! -z "$(check_dangerous_state_force_mode)" ]; then
+    __log_msg "Git repository is in a conflicted or merging state. Please resolve manually."
+    git status
+    exit 1
+  fi
+else
 # check for intentionally unhandled file states
 if [ ! -z "$(check_initial_file_state)" ] ; then
     __log_msg "There are changed files you should probably handle manually."
     git status
     exit 1
+fi
 fi
 
 # if in check mode, this is all we need to know
