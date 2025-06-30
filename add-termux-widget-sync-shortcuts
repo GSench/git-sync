@@ -8,14 +8,14 @@ ICON_DIR="$SHORTCUT_DIR/icons"
 LOG_FILE="_sync_log.txt"
 
 # === Paths for individual shortcut scripts ===
-SYNC_SCRIPT="${SHORTCUT_DIR}/git-sync_${REPO_NAME}"
-VIEW_SCRIPT="${SHORTCUT_DIR}/view-sync-log_${REPO_NAME}"
-CLEAR_SCRIPT="${SHORTCUT_DIR}/clear-sync-log_${REPO_NAME}"
+SYNC_SCRIPT="${SHORTCUT_DIR}/01_git-sync_${REPO_NAME}"
+VIEW_SCRIPT="${SHORTCUT_DIR}/03_view-sync-log_${REPO_NAME}"
+CLEAR_SCRIPT="${SHORTCUT_DIR}/05_clear-sync-log_${REPO_NAME}"
 
 # === Paths for all-* scripts ===
-ALL_SYNC="${SHORTCUT_DIR}/git-sync-all"
-ALL_VIEW="${SHORTCUT_DIR}/view-sync-log-all"
-ALL_CLEAR="${SHORTCUT_DIR}/clear-sync-log-all"
+ALL_SYNC="${SHORTCUT_DIR}/00_git-sync-all"
+ALL_VIEW="${SHORTCUT_DIR}/02_view-sync-log-all"
+ALL_CLEAR="${SHORTCUT_DIR}/04_clear-sync-log-all"
 
 # === Create shortcut & icon directory ===
 # Create necessary directories with secure permissions
