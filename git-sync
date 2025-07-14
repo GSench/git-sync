@@ -407,7 +407,7 @@ if [ ! -z "$(local_changes)" ]; then
     if [ ! -z "$config_autocommit_cmd" ]; then
 	autocommit_cmd="$config_autocommit_cmd"
     else
-        autocommit_cmd="$(__gitadd); $(__gitcommit);"
+        autocommit_cmd="$(__gitadd); git -c color.status=always status; $(__gitcommit);"
     fi
 
     commit_msg="$(git config --get branch.$branch_name.syncCommitMsg)"

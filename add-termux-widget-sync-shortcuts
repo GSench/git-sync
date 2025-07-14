@@ -76,6 +76,9 @@ cat > "$ALL_SYNC" <<EOF
 #!/data/data/com.termux/files/usr/bin/bash
 for f in $SHORTCUT_DIR/02_git-sync_*; do
   [[ "\$f" == *-all ]] && continue
+  echo
+  echo
+  echo "________________________________"
   echo "🔄 Running: \$f" && bash "\$f"
 done
 read -n 1 -s -r -p "Press any key to continue..."
@@ -88,6 +91,9 @@ cat > "$ALL_VIEW" <<EOF
 #!/data/data/com.termux/files/usr/bin/bash
 for f in $SHORTCUT_DIR/04_view-sync-log_*; do
   [[ "\$f" == *-all ]] && continue
+  echo
+  echo
+  echo "________________________________"
   echo "📄 Viewing: \$f" && bash "\$f"
 done
 read -n 1 -s -r -p "Press any key to continue..."
@@ -100,6 +106,9 @@ cat > "$ALL_CLEAR" <<EOF
 #!/data/data/com.termux/files/usr/bin/bash
 for f in $SHORTCUT_DIR/06_clear-sync-log_*; do
   [[ "\$f" == *-all ]] && continue
+  echo
+  echo
+  echo "________________________________"
   echo "🧹 Clearing: \$f" && bash "\$f"
 done
 read -n 1 -s -r -p "Press any key to continue..."

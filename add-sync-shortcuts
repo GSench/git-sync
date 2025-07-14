@@ -59,6 +59,9 @@ cat > "$ALL_SYNC" <<EOF
 #!/bin/bash
 for f in $SHORTCUT_DIR/02_git-sync_*; do
   [[ "\$f" == *-all ]] && continue
+  echo
+  echo
+  echo "________________________________"
   echo "🔄 Running: \$f" && bash "\$f"
 done
 EOF
@@ -69,6 +72,9 @@ cat > "$ALL_VIEW" <<EOF
 #!/bin/bash
 for f in $SHORTCUT_DIR/04_view-sync-log_*; do
   [[ "\$f" == *-all ]] && continue
+  echo
+  echo
+  echo "________________________________"
   echo "📄 Viewing: \$f" && bash "\$f"
 done
 EOF
@@ -79,6 +85,9 @@ cat > "$ALL_CLEAR" <<EOF
 #!/bin/bash
 for f in $SHORTCUT_DIR/06_clear-sync-log_*; do
   [[ "\$f" == *-all ]] && continue
+  echo
+  echo
+  echo "________________________________"
   echo "🧹 Clearing: \$f" && bash "\$f"
 done
 EOF
