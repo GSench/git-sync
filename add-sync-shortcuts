@@ -29,6 +29,7 @@ cd "$REPO_DIR"
   echo "==== \$(date '+%Y-%m-%d %H:%M:%S') ===="
   bash git-sync -f -s
 } 2>&1 | tee -a "$LOG_FILE"
+echo
 EOF
 chmod +x "$SYNC_SCRIPT"
 
@@ -42,6 +43,7 @@ if [ -f "$LOG_FILE" ]; then
 else
   echo "No sync log found."
 fi
+echo
 EOF
 chmod +x "$VIEW_SCRIPT"
 
@@ -51,6 +53,7 @@ cat > "$CLEAR_SCRIPT" <<EOF
 cd "$REPO_DIR"
 > "$LOG_FILE"
 echo "Sync log cleared for $REPO_NAME."
+echo
 EOF
 chmod +x "$CLEAR_SCRIPT"
 

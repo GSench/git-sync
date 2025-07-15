@@ -31,7 +31,12 @@ cd "$REPO_DIR"
   echo "==== \$(date '+%Y-%m-%d %H:%M:%S') ===="
   bash git-sync -f -s
 } 2>&1 | tee -a "$LOG_FILE"
-read -n 1 -s -r -p "Press any key to continue..."
+EOF
+cat >> "$SYNC_SCRIPT" <<'EOF'
+if [ -z "$SKIP_PAUSE" ]; then
+  echo
+  read -n 1 -s -r -p "Press any key to continue..."
+fi
 echo
 EOF
 chmod +x "$SYNC_SCRIPT"
@@ -46,7 +51,12 @@ if [ -f "$LOG_FILE" ]; then
 else
   echo "No sync log found."
 fi
-read -n 1 -s -r -p "Press any key to continue..."
+EOF
+cat >> "$VIEW_SCRIPT" <<'EOF'
+if [ -z "$SKIP_PAUSE" ]; then
+  echo
+  read -n 1 -s -r -p "Press any key to continue..."
+fi
 echo
 EOF
 chmod +x "$VIEW_SCRIPT"
@@ -57,7 +67,12 @@ cat > "$CLEAR_SCRIPT" <<EOF
 cd "$REPO_DIR"
 > "$LOG_FILE"
 echo "Sync log cleared for $REPO_NAME."
-read -n 1 -s -r -p "Press any key to continue..."
+EOF
+cat >> "$CLEAR_SCRIPT" <<'EOF'
+if [ -z "$SKIP_PAUSE" ]; then
+  echo
+  read -n 1 -s -r -p "Press any key to continue..."
+fi
 echo
 EOF
 chmod +x "$CLEAR_SCRIPT"
@@ -81,7 +96,7 @@ for f in $SHORTCUT_DIR/02_git-sync_*; do
   echo
   echo "🔄 Running: \$f"
   echo "________________________________"
-  bash "\$f"
+  SKIP_PAUSE=1 bash "\$f"
 done
 read -n 1 -s -r -p "Press any key to continue..."
 echo
@@ -98,7 +113,7 @@ for f in $SHORTCUT_DIR/04_view-sync-log_*; do
   echo
   echo "📄 Viewing: \$f"
   echo "________________________________"
-  bash "\$f"
+  SKIP_PAUSE=1 bash "\$f"
 done
 read -n 1 -s -r -p "Press any key to continue..."
 echo
@@ -115,7 +130,7 @@ for f in $SHORTCUT_DIR/06_clear-sync-log_*; do
   echo
   echo "🧹 Clearing: \$f"
   echo "________________________________"
-  bash "\$f"
+  SKIP_PAUSE=1 bash "\$f"
 done
 read -n 1 -s -r -p "Press any key to continue..."
 echo
